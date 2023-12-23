@@ -1,4 +1,4 @@
-const SubjectService = require('../services/subject.service');
+const SubjectService = require('./subject.service');
 
 exports.createSubject = async (req, res) => {
   try {

@@ -1,4 +1,4 @@
-const Subject = require('../models/subject.model');
+const Subject = require('../../models/subject/subject.model');
 
 exports.createSubject = async (subjectData) => {
   return Subject.create(subjectData);
