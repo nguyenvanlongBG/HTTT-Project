@@ -23,7 +23,7 @@ exports.createClasses = async (req, res) => {
 
 exports.getClassesById = async (req, res) => {
     try {
-        const ClassesData = await ClassesService.getClassesById(req.params.ClassesId);
+        const ClassesData = await ClassesService.getClassById(req.params.ClassesId);
         res.status(200).json({
             success: true,
             messages: ["Lấy thông tin lớp học thành công"],
@@ -43,7 +43,7 @@ exports.updateClasses = async (req, res) => {
     const newData = req.body;
 
     try {
-        const updatedClasses = await ClassesService.updateClasses(ClassesId, newData);
+        const updatedClasses = await ClassesService.updateClass(ClassesId, newData);
         res.status(200).json({
             success: true,
             messages: ["Cập nhật thông tin lớp học thành công"],
@@ -61,7 +61,7 @@ exports.updateClasses = async (req, res) => {
 exports.deleteClasses = async (req, res) => {
     try {
         const { ClassesId } = req.params;
-        const deletedClasses = await ClassesService.deleteClasses(ClassesId);
+        const deletedClasses = await ClassesService.deleteClass(ClassesId);
         res.status(201).json({
             success: true,
             messages: ["Xóa lớp học thành công"],
@@ -97,7 +97,7 @@ exports.getClassesByUserId = async (req, res) => {
 exports.addStudentToClasses = async (req, res) => {
     const { classId, studentId } = req.params;
     try {
-        const updatedClasses = await classesService.addStudentToClass(classId, studentId);
+        const updatedClasses = await ClassesService.addStudentToClass(classId, studentId);
         res.status(200).json({
             success: true,
             messages: ["Thêm học sinh vào lớp thành công"],
@@ -115,7 +115,7 @@ exports.addStudentToClasses = async (req, res) => {
 exports.removeStudentFromClasses = async (req, res) => {
     const { classId, studentId } = req.params;
     try {
-        const updatedClasses = await classesService.removeStudentFromClass(classId, studentId);
+        const updatedClasses = await ClassesService.removeStudentFromClass(classId, studentId);
         res.status(200).json({
             success: true,
             messages: ["Xóa học sinh khỏi lớp thành công"],
