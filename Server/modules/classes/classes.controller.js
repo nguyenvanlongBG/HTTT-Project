@@ -2,7 +2,11 @@ const ClassesService = require('./classes.service');
 
 exports.createClasses = async (req, res) => {
     try {
-        const newClasses = await ClassesService.createClasses(req.body);
+        // Lấy user_id từ đối tượng người dùng đã xác thực (nếu có)
+        const user_id = req.user ? req.user._id : null;
+
+        const newClasses = await ClassesService.createClass({ ...req.body, user_id });
+
         res.status(201).json({
             success: true,
             messages: ["Tạo lớp học thành công"],
