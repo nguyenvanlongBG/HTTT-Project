@@ -95,9 +95,10 @@ exports.getClassesByUserId = async (req, res) => {
 }
 
 exports.addStudentToClasses = async (req, res) => {
-    const { classId, studentId } = req.params;
+    const { ClassesId } = req.params;
+    const { emails } = req.body;
     try {
-        const updatedClasses = await ClassesService.addStudentToClass(classId, studentId);
+        const updatedClasses = await ClassesService.addStudentToClass(ClassesId, emails);
         res.status(200).json({
             success: true,
             messages: ["Thêm học sinh vào lớp thành công"],
@@ -113,9 +114,9 @@ exports.addStudentToClasses = async (req, res) => {
 }
 
 exports.removeStudentFromClasses = async (req, res) => {
-    const { classId, studentId } = req.params;
+    const { ClassesId, studentId } = req.params;
     try {
-        const updatedClasses = await ClassesService.removeStudentFromClass(classId, studentId);
+        const updatedClasses = await ClassesService.removeStudentFromClass(ClassesId, studentId);
         res.status(200).json({
             success: true,
             messages: ["Xóa học sinh khỏi lớp thành công"],
@@ -132,8 +133,8 @@ exports.removeStudentFromClasses = async (req, res) => {
 
 exports.getStudentsInClasses = async (req, res) => {
     try {
-        const { classId } = req.params;
-        const students = await ClassesService.getStudentsInClass(classId);
+        const { ClassesId } = req.params;
+        const students = await ClassesService.getStudentsInClass(ClassesId);
         res.status(200).json({
             success: true,
             messages: ["Lấy danh sách học sinh trong lớp thành công"],

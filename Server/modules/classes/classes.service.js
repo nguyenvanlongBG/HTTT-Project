@@ -1,4 +1,5 @@
 const Classes = require("../../models/classes/classes.model");
+const User = require("../../models/user/user.model");
 
 const generateUniqueClassCode = async () => {
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -93,11 +94,12 @@ exports.getClassesByUserId = async (userId) => {
     }
 }
 
-exports.addStudentToClass = async (id, studentId) => {
+exports.addStudentToClass = async (id, emails) => {
     try {
+        const students = await User.find({ email: { $in: emails } });
         const updatedClasses = await Classes.findByIdAndUpdate(
             id,
-            { $addToSet: { students: studentId } },
+            { $addToSet: { students: { $each: students } } },
             { new: true }
         ).exec();
         if (!updatedClasses) {

@@ -14,6 +14,11 @@ const ClassesSchema = new mongoose.Schema({
         required: true,
         unique: true
     },
+    subject_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Subject', // Chỉ định collection (model) liên quan nếu cần
+        required: true,
+    },
     students: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'

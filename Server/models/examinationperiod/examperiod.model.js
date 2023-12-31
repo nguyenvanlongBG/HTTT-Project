@@ -5,15 +5,16 @@ const examPeriodSchema = new mongoose.Schema({
     subject_id: { type: mongoose.Schema.Types.ObjectId, required: true },
     startTime: { type: Date, required: true },
     finishTime: { type: Date, required: true },
-    user_id: { type: mongoose.Schema.Types.ObjectId, required: true },
-    exam_format: {
-        type: {
-            level1: { type: Number, default: 0 },
-            level2: { type: Number, default: 0 },
-            level3: { type: Number, default: 0 },
-            level4: { type: Number, default: 0 },
-        },
+    user_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
         required: true,
+    },
+    exam_format: {
+        level1: { type: Number, default: 0 },
+        level2: { type: Number, default: 0 },
+        level3: { type: Number, default: 0 },
+        level4: { type: Number, default: 0 }
     },
     students: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
 }, {

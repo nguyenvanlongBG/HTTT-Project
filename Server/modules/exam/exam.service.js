@@ -5,13 +5,11 @@ const Answer = require('../../models/answer/answer.model');
 
 // Hàm tạo đề thi cho mỗi học sinh dựa trên exam_format
 const generateStudentExam = (questions, exam_format) => {
-  const { type } = exam_format;
-
   const selectedQuestions = [];
   let remainingQuestions = [...questions];
 
   // Lấy số lượng câu hỏi từng loại và mức độ tương ứng
-  const { level1, level2, level3, level4 } = type;
+  const { level1, level2, level3, level4 } = exam_format;
 
   // Hàm lấy ngẫu nhiên câu hỏi từ danh sách và loại bỏ khỏi danh sách còn lại
   const getRandomQuestion = (questionList) => {
@@ -26,31 +24,28 @@ const generateStudentExam = (questions, exam_format) => {
   // Lấy câu hỏi cho mức độ 1
   for (let i = 0; i < level1; i++) {
     const question = getRandomQuestion(remainingQuestions.filter((q) => q.level === 1));
-    if (question) selectedQuestions.push(question);
+    if (question) selectedQuestions.push(question._id);
   }
 
   // Lấy câu hỏi cho mức độ 2
   for (let i = 0; i < level2; i++) {
     const question = getRandomQuestion(remainingQuestions.filter((q) => q.level === 2));
-    if (question) selectedQuestions.push(question);
+    if (question) selectedQuestions.push(question._id);
   }
 
   // Lấy câu hỏi cho mức độ 3
   for (let i = 0; i < level3; i++) {
     const question = getRandomQuestion(remainingQuestions.filter((q) => q.level === 3));
-    if (question) selectedQuestions.push(question);
+    if (question) selectedQuestions.push(question._id);
   }
 
   // Lấy câu hỏi cho mức độ 4
   for (let i = 0; i < level4; i++) {
     const question = getRandomQuestion(remainingQuestions.filter((q) => q.level === 4));
-    if (question) selectedQuestions.push(question);
+    if (question) selectedQuestions.push(question._id);
   }
 
-  return selectedQuestions.map((question) => ({
-    question_id: question._id,
-    // Các thông tin khác của câu hỏi (nếu cần)
-  }));
+  return selectedQuestions;
 };
 
 exports.createExamsForExamPeriod = async (examPeriodId) => {
@@ -76,6 +71,7 @@ exports.createExamsForExamPeriod = async (examPeriodId) => {
       const examData = {
         exam_period_id: examPeriodId,
         user_id: studentId,
+        type: 1,
         questions: studentExam,
       };
       exams.push(examData);

@@ -3,7 +3,7 @@ const QuestionService = require('./question.service');
 exports.createQuestionWithAnswers = async (req, res) => {
   try {
     const { questionData, answersData } = req.body;
-    const result = await QuestionService.createQuestionWithAnswers(questionData, answersData);
+    const result = await QuestionService.createQuestionWithAnswers(questionData, answersData, req.user._id);
     res.status(201).json(result);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -11,10 +11,21 @@ exports.createQuestionWithAnswers = async (req, res) => {
 };
 
 exports.getAllQuestionsWithAnswers = async (req, res) => {
-  const { role, userId } = req.user;
+  const { role, _id } = req.user;
 
   try {
-    const questionsWithAnswers = await QuestionService.getAllQuestionsWithAnswers(role, userId);
+    const questionsWithAnswers = await QuestionService.getAllQuestionsWithAnswers(role, _id);
+    res.status(200).json(questionsWithAnswers);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+exports.getQuestionsBySubject = async (req, res) => {
+  const { role, _id } = req.user;
+
+  try {
+    const questionsWithAnswers = await QuestionService.getQuestionsBySubject(role, _id, req.params.subjectId);
     res.status(200).json(questionsWithAnswers);
   } catch (error) {
     res.status(500).json({ error: error.message });

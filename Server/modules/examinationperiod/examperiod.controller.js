@@ -2,16 +2,18 @@ const ExamPeriodService = require('./examperiod.service');
 
 exports.createExamPeriod = async (req, res) => {
   try {
-    const examPeriod = await ExamPeriodService.createExamPeriod(req.body);
+    const examPeriod = await ExamPeriodService.createExamPeriod(req.body, req.user._id);
     res.status(201).json(examPeriod);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
 
+
 exports.addStudentsToExamPeriod = async (req, res) => {
   try {
-    const { examPeriodId, studentIds } = req.body;
+    const { examPeriodId}  = req.params;
+    const { studentIds } = req.body;
 
     const updatedExamPeriod = await ExamPeriodService.addStudentsToExamPeriod(examPeriodId, studentIds);
 

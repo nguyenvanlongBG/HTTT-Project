@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 exports.auth = async (req, res, next) => {
     try {
         let token = req.headers.authorization.split(' ')[1];
-
+        console.log("token: " + token)
         if (!token) {
             throw Error("unauthorization");
         }
@@ -25,7 +25,6 @@ exports.auth = async (req, res, next) => {
             content: error.message
         })
     }
-    console.log(req.headers.authorization.split(' ')[1])
 }
 
 exports.checkRole = (role) => {

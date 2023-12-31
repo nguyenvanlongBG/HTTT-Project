@@ -10,6 +10,7 @@ const examPeriod = require('./modules/examinationperiod/examperiod.route');
 const exam = require('./modules/exam/exam.route');
 const question = require('./modules/question/question.route');
 const subject = require('./modules/subject/subject.route');
+const submission = require('./modules/submission/submission.route')
 
 const app = express();
 
@@ -28,6 +29,7 @@ app.use('/period', examPeriod);
 app.use('/exam', exam);
 app.use('/question', question);
 app.use('/subject', subject);
+app.use('/submission', submission);
 
 const PORT = process.env.PORT;
 const MONGODB_URI = process.env.MONGODB_URI;
