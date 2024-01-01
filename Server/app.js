@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
+const cors = require("cors");
 
 const auth = require('./modules/auth/auth.route');
 const user = require('./modules/user/user.route');
@@ -15,9 +16,12 @@ const submission = require('./modules/submission/submission.route')
 const app = express();
 
 app.use(express.json());
+
+app.use(cors());
+
 app.use(
     express.urlencoded({
-        extended: false,
+        extended: true,
     })
 );
 
