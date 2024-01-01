@@ -32,17 +32,19 @@
         <div class="form">
           <label for="email">Tài khoản</label>
           <input
+            class="font-size-input-login"
             type="email"
             id="email"
             placeholder="Email"
-            v-model="account.email"
+            v-model="email"
           />
           <label for="password">Mật khẩu</label>
           <input
+            class="font-size-input-login"
             type="password"
             id="password"
-            placeholder="Mật khẩu"
-            v-model="account.password"
+            placeholder="****"
+            v-model="password"
           />
           <div class="button-login-register">
             <div class="button" @click="handleSubmit">Đăng nhập</div>
@@ -55,20 +57,20 @@
 </template>
 <script>
 import { ref } from 'vue';
-
+import { login } from '../services/authen';
 export default {
   name: 'LoginComponent',
   setup() {
-    const account = ref({
-      email: '',
-      password: '',
-    });
+    const email = ref('');
+    const password = ref('');
     const isSubmiting = ref(false);
     async function handleSubmit() {
+      const response = await login(email.value, password.value);
       isSubmiting.value = true;
     }
     return {
-      account,
+      email,
+      password,
       isSubmiting,
       handleSubmit,
     };
@@ -200,7 +202,7 @@ path {
 label {
   color: #c2c2c5;
   display: block;
-  font-size: 14px;
+  font-size: 18px;
   height: 16px;
   margin-top: 20px;
   margin-bottom: 5px;
@@ -240,5 +242,8 @@ input::-moz-focus-inner {
 
 .button:active {
   color: #d0d0d2;
+}
+.font-size-input-login {
+  font-size: 16px;
 }
 </style>

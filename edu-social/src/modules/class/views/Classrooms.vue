@@ -3,11 +3,6 @@
     <h4>Lớp học của bạn</h4>
     <div class="list-classroom">
       <ClassroomComponent />
-      <ClassroomComponent />
-      <ClassroomComponent />
-      <ClassroomComponent />
-      <ClassroomComponent />
-      <ClassroomComponent />
     </div>
   </div>
 </template>
