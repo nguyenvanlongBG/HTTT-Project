@@ -10,7 +10,7 @@ const REQUEST_HEADER = {
   'Content-Type': HEADER_CONTENT_TYPE,
 };
 const service = axios.create({
-  baseURL: 'http://localhost:8000/api',
+  baseURL: 'http://localhost:8080',
   withCredentials: WITH_CREDENTIALS,
   headers: REQUEST_HEADER,
 });
@@ -18,7 +18,7 @@ service.interceptors.request.use(
   (config) => {
     const token = getAccessToken();
     if (token) {
-      config.headers['Authorization'] = 'Bearer ' + token;
+      config.headers['Authorization'] = 'bearer ' + token;
     }
     return config;
   },

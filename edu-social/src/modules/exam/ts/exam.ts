@@ -1,6 +1,6 @@
 import { defineComponent, ref } from 'vue';
 import QuestionComponent from '../../core/components/question/QuestionComponent.vue';
-import { useExamStore } from '../store';
+import { useExamStore } from '../stores';
 import { storeToRefs } from 'pinia';
 export default defineComponent({
   components: {

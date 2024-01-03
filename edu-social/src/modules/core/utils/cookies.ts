@@ -1,5 +1,5 @@
 import Cookies from 'universal-cookie';
-const accessToken = 'accessTokenEduNetwork';
+const accessToken = 'accessTokenEduSocial';
 export function getAccessToken() {
   return new Cookies().get(accessToken);
 }
