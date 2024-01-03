@@ -88,3 +88,26 @@ exports.deleteExamPeriod = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+exports.getExamPeriodsForClass = async (req, res) => {
+  const { classId } = req.params;
+  
+  try {
+      const examPeriods = await ExamPeriodService.getExamPeriodsForClass(classId);
+      res.status(200).json(examPeriods);
+  } catch (error) {
+      res.status(500).json({ error: error.message });
+  }
+};
+
+exports.addStudentsFromClassToExamPeriod = async (req, res) => {
+  try {
+      const { examPeriodId } = req.params;
+      const { class_id } = req.body;
+
+      const updatedExamPeriod = await ExamPeriodService.addStudentsFromClassToExamPeriod(examPeriodId, class_id);
+      res.status(200).json(updatedExamPeriod);
+  } catch (error) {
+      res.status(500).json({ error: error.message });
+  }
+};

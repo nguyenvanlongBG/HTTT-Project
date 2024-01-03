@@ -5,6 +5,11 @@ const examPeriodSchema = new mongoose.Schema({
     subject_id: { type: mongoose.Schema.Types.ObjectId, required: true },
     startTime: { type: Date, required: true },
     finishTime: { type: Date, required: true },
+    class_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Classes',
+        required: true,
+    },
     user_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
