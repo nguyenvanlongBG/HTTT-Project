@@ -22,7 +22,7 @@ exports.getExams = async (req, res) => {
 exports.getExamWithQuestionsAndAnswers = async (req, res) => {
   try {
     const { examId } = req.params;
-    const result = await examService.getExamWithQuestionsAndAnswers(examId);
+    const result = await ExamService.getExamWithQuestionsAndAnswers(examId);
     res.status(200).json({ success: true, content: result });
   } catch (error) {
     console.error('Error fetching exam with questions and answers:', error);
