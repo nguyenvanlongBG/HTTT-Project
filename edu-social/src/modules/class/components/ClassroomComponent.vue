@@ -1,5 +1,5 @@
 <template>
-  <div class="container-classroom" @click="goToClassroom(1)">
+  <div class="container-classroom" @click="goToClassroom">
     <div class="classroom">
       <div class="box-action-classroom">
         <i
@@ -28,19 +28,34 @@
 </template>
 <script>
 import { ref } from 'vue';
-
+import router from 'src/router';
+import { Classroom } from '../models';
 export default {
   name: 'ClassroomComponent',
-  setup() {
+  props: {
+    classroom: {
+      type: Classroom,
+      required: true,
+    },
+  },
+  setup(props, ctx) {
     const displayNavClassroom = ref(false);
+    function displayActionClassroom() {
+      this.displayNavClassroom = !this.displayNavClassroom;
+    }
+    function goToClassroom() {
+      router.push({
+        name: 'detailClassroom',
+        params: {
+          classID: props.classroom._id,
+        },
+      });
+    }
     return {
       displayNavClassroom,
+      displayActionClassroom,
+      goToClassroom,
     };
-  },
-  methods: {
-    displayActionClassroom() {
-      this.displayNavClassroom = !this.displayNavClassroom;
-    },
   },
 };
 </script>

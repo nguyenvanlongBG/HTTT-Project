@@ -1,5 +1,4 @@
 import request from '../../core/utils/request';
-import { setAccessToken } from '../../core/utils/cookies';
 import { Classroom } from '../models';
 
 export async function getClassByUser(userId: string) {
@@ -7,8 +6,9 @@ export async function getClassByUser(userId: string) {
     url: `/classes/user/${userId}`,
     method: 'get',
   });
-  if (response) {
-    const classrooms: Classroom[] = response as Classroom[];
+  if (response && response.content) {
+    const classrooms: Classroom[] = response.content as Classroom[];
+    console.log(classrooms);
     return classrooms;
   }
   return [];
@@ -19,9 +19,19 @@ export async function getDetailClass(classId: string) {
     url: `/classes/${classId}`,
     method: 'get',
   });
-  if (response) {
-    const classrooms: Classroom = response as Classroom;
+  if (response && response.content) {
+    const classrooms: Classroom = response.content as Classroom;
     return classrooms;
   }
   return null;
+}
+export async function getPeriodsByClassID(classID: string) {
+  const response = await request({
+    url: `period/class/${classID}`,
+    method: 'get',
+  });
+  if (response) {
+    return response;
+  }
+  return [];
 }

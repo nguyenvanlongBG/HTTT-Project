@@ -46,6 +46,7 @@
             placeholder="****"
             v-model="password"
           />
+          <div class="red-color" v-if="message">{{ message }}</div>
           <div class="button-login-register">
             <div class="button" @click="handleSubmit">Đăng nhập</div>
             <a class="button" href="#/register">Đăng ký</a>
@@ -58,20 +59,25 @@
 <script>
 import { ref } from 'vue';
 import { login } from '../services/authen';
+import router from 'src/router';
 export default {
   name: 'LoginComponent',
   setup() {
     const email = ref('');
     const password = ref('');
-    const isSubmiting = ref(false);
+    const message = ref('');
     async function handleSubmit() {
       const response = await login(email.value, password.value);
-      isSubmiting.value = true;
+      if (!response.success) {
+        message.value = response.messages[0];
+      } else {
+        router.push({ name: 'class' });
+      }
     }
     return {
       email,
       password,
-      isSubmiting,
+      message,
       handleSubmit,
     };
   },

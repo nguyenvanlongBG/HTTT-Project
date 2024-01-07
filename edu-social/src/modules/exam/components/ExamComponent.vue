@@ -4,12 +4,42 @@
       <div class="toolbar-exam" v-if="editMode == 2">
         <q-btn color="primary" class="create-question" label="Thêm câu hỏi" />
       </div>
-      <QuestionComponent
-        v-for="question in getQuestions"
-        :key="question.id"
-        :question="question"
-        :statusEdit="hasRoleEdit && editMode == 2"
-      />
+      <div v-if="editMode == 1">
+        <QuestionComponent
+          v-for="(question, index) in questions"
+          :key="question._id"
+          :question="question"
+          v-model:answer="answersUser[index]"
+        />
+      </div>
+      <div v-if="editMode == 2">
+        <QuestionComponent
+          v-for="(question, index) in questions"
+          :key="question._id"
+          :question="question"
+          :statusEdit="hasRoleEdit"
+          :isShowResult="true"
+          v-model:answer="answersUser[index]"
+        />
+      </div>
+      <div v-if="editMode == 3">
+        <QuestionComponent
+          v-for="(question, index) in questions"
+          :key="question._id"
+          :question="question"
+          :isShowAnswer="true"
+          :isShowResult="true"
+          :answer="answersUser[index]"
+        />
+      </div>
+      <div class="toolbar-exam" v-if="editMode == 1">
+        <q-btn
+          color="primary"
+          class="create-question"
+          label="Nộp bài"
+          @click="submit"
+        />
+      </div>
     </div>
     <div class="navbar-questions">
       <div class="numeric-question-board">

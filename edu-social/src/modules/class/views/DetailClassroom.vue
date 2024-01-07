@@ -1,27 +1,31 @@
 <template>
   <div class="container-detail-class">
     <div class="detail">
-      <div class="post">
+      <div v-for="period in periods" class="post" :key="period._id">
         <div class="owner-post">
           <AvatarComponent></AvatarComponent>
         </div>
         <div class="description">
-          <div>Đây là một bài post test</div>
+          <div>Đề thi</div>
           <div class="actions">
-            <q-btn color="white" text-color="black" label="Làm đề" />
-            <q-btn color="white" text-color="black" label="Lịch sử" />
-          </div>
-        </div>
-      </div>
-      <div class="post">
-        <div class="owner-post">
-          <AvatarComponent></AvatarComponent>
-        </div>
-        <div class="description">
-          <div>Đây là một bài post test</div>
-          <div class="actions">
-            <q-btn color="white" text-color="black" label="Làm đề" />
-            <q-btn color="white" text-color="black" label="Lịch sử" />
+            <q-btn
+              color="white"
+              text-color="black"
+              label="Làm đề"
+              @click="() => doExam('65905053dc5fb4428295a053')"
+            />
+            <q-btn
+              color="white"
+              text-color="black"
+              label="Sửa đề"
+              @click="() => editExam('65905053dc5fb4428295a053')"
+            />
+            <q-btn
+              color="white"
+              text-color="black"
+              label="Lịch sử"
+              @click="() => historyExam('65905053dc5fb4428295a053')"
+            />
           </div>
         </div>
       </div>
@@ -62,19 +66,62 @@
     </div>
   </div>
 </template>
-<script>
+<script lang="ts">
 import AvatarComponent from 'src/modules/core/components/avatar/AvatarComponent.vue';
 import { ref } from 'vue';
+import { getPeriodsByClassID } from '../services/classroomService';
+import router from '../../../router/index';
 
 export default {
   name: 'DetailClassroom',
   components: { AvatarComponent },
+  async created() {
+    this.periods = await getPeriodsByClassID('6590184b7f8e81ae83f6c124');
+  },
   setup() {
     const isExpandingMember = ref(false);
+    const periods = ref([]);
     function changeStatusExpand() {
       isExpandingMember.value = !isExpandingMember.value;
     }
+    function doExam(examID: string) {
+      router.push({
+        name: 'exam',
+        params: {
+          id: examID,
+        },
+        query: {
+          editMode: 1,
+        },
+      });
+    }
+    function editExam(examID: string) {
+      router.push({
+        name: 'exam',
+        params: {
+          id: examID,
+        },
+        query: {
+          editMode: 2,
+        },
+      });
+    }
+    function historyExam(examID: string) {
+      router.push({
+        name: 'exam',
+        params: {
+          id: examID,
+        },
+        query: {
+          editMode: 3,
+        },
+      });
+    }
     return {
+      periods,
+      doExam,
+      editExam,
+      historyExam,
       isExpandingMember,
       changeStatusExpand,
     };

@@ -34,24 +34,16 @@ service.interceptors.response.use(
     return response.data;
   },
   (error) => {
-    if (error.response.status == 401) {
+    if (error.response.status >= 400 && error.response.status < 500) {
       removeAccessToken();
       router.push({ name: 'login' });
-    }
-    if (error.response.status === 500) {
-      router.push({
-        name: 'Error',
-        params: {
-          pathMatch: 403,
-        },
-      });
     }
     let message = error.message;
     if (error.response.data) {
       message = error.response.data.message || 'Lỗi';
     }
     console.log(message);
-    return Promise.reject(error);
+    return error.response.data;
   }
 );
 export default service;

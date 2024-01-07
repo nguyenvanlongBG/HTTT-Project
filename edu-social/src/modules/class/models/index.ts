@@ -1,5 +1,8 @@
 export interface Classroom {
-  id: string;
-  name: string;
-  description: string;
+  _id: string;
+  user_id: string;
+  class_name: string;
+  class_code: string;
+  subject_id: string;
+  students: string[];
 }

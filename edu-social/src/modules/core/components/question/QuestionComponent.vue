@@ -19,29 +19,36 @@
       />
     </div>
     <div class="question-content">
-      <EditorComponent :content="question.content" :isReadonly="!isEdit" />
+      <EditorComponent
+        :content="question.question.description"
+        :isReadonly="!isEdit"
+      />
     </div>
-    <q-list class="answers" v-if="question.type == 2">
+    <q-list class="answers" v-if="question.question.question_type == 1">
       <q-item
-        :active="results.includes(answer.id) ? true : false"
-        active-class="result"
+        :active="isActive(choose) ? true : false"
+        :active-class="isActive(choose)"
         class="answer"
         color="teal"
         tag="label"
-        v-for="answer in question.answers"
-        :key="answer.id"
+        v-for="choose in question.answers"
+        :key="choose._id"
         v-ripple
+        @click="updateChooseAnswer(choose._id)"
       >
         <q-item-section class="hidden" avatar top>
           <q-radio
             :disable="isEdit"
-            v-model="results[0]"
-            :val="answer.id"
+            v-model="answer"
+            :val="choose._id"
           ></q-radio>
         </q-item-section>
         <q-item-section>
           <div class="content-answer">
-            <EditorComponent :content="answer.content" :isReadonly="!isEdit" />
+            <EditorComponent
+              :content="choose.description"
+              :isReadonly="!isEdit"
+            />
           </div>
         </q-item-section>
       </q-item>
@@ -50,22 +57,22 @@
       </div>
     </q-list>
 
-    <q-list class="answers" v-if="question.type == 3">
+    <q-list class="answers" v-if="question.question.question_type == 2">
       <q-item
-        :active="results.includes(answer.id) ? true : false"
+        :active="results.includes(answer._id) ? true : false"
         active-class="result"
         class="answer"
         color="teal"
         tag="label"
         v-for="answer in question.answers"
-        :key="answer.id"
+        :key="answer._id"
         v-ripple
       >
         <q-item-section avatar top>
           <q-checkbox
             :disable="isEdit"
             v-model="results"
-            :val="answer.id"
+            :val="answer._id"
           ></q-checkbox>
         </q-item-section>
         <q-item-section>

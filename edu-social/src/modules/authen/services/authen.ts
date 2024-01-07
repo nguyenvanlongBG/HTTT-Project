@@ -1,5 +1,5 @@
 import request from '../../core/utils/request';
-import { setAccessToken } from '../../core/utils/cookies';
+import { setAccessToken, setCoookieValue } from '../../core/utils/cookies';
 
 export async function login(email: string, password: string) {
   const response = await request({
@@ -7,8 +7,13 @@ export async function login(email: string, password: string) {
     method: 'post',
     data: { email: email, password: password },
   });
-  if (response.token) {
-    const token = response.token as string;
+  if (response.content.token) {
+    const token = response.content.token as string;
     setAccessToken(token);
   }
+  if (response.content.user._id) {
+    const userID = response.content.user._id as string;
+    setCoookieValue('userID', userID);
+  }
+  return response;
 }

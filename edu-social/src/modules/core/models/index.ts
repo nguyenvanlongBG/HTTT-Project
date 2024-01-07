@@ -4,13 +4,19 @@ export interface User {
   avatarUrl: string;
 }
 export interface Answer {
-  id: string;
-  content: string;
+  _id: string;
+  description: string;
+  is_correct: boolean;
 }
 export interface Question {
-  id: string;
+  _id: string;
   content: string;
   type: number; // 1: Tự luận 2: Trắc nghiệm 1 đáp án 3: Chọn nhiều đáp án 4: Điền đáp án
   result: string;
   answers: Answer[];
+}
+export interface AnswerUser {
+  _id: string;
+  question_id: string;
+  selected_answers: [];
 }
