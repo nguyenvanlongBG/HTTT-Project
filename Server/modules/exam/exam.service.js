@@ -141,6 +141,15 @@ function shuffleArray(array) {
   return shuffled;
 }
 
+exports.getExamByPeriod = async (examPeriodId, userId) => {
+  try {
+    const exams = await Exam.find({ exam_period_id: examPeriodId, user_id: userId })
+    return exams;
+  } catch (error) {
+    console.error('Error fetching exams by exam period and user:', error);
+    throw error;
+  }
+};
 
 exports.getExams = async () => {
   return Exam.find();

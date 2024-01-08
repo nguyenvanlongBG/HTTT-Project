@@ -9,4 +9,6 @@ router.get('/:examId', ExamController.getExamWithQuestionsAndAnswers);
 router.put('/:examId', auth, ExamController.updateExam);
 router.delete('/:examId', auth, ExamController.deleteExam);
 
+router.get('/period/:examPeriodId', auth, ExamController.getExamByPeriod);
+
 module.exports = router;
