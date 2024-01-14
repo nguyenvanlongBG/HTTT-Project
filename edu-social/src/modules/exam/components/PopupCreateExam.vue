@@ -124,10 +124,10 @@ export default defineComponent({
         startTime: startTime.value,
         finishTime: finishTime.value,
         exam_format: {
-          level1: easyLevel,
-          level2: mediumLevel,
-          level3: highLevel,
-          level4: highestLevel,
+          level1: easyLevel.value,
+          level2: mediumLevel.value,
+          level3: highLevel.value,
+          level4: highestLevel.value,
         },
       };
       onDialogOK(data);
