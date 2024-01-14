@@ -1,7 +1,7 @@
 const Classes = require('../../models/classes/classes.model');
 const ClassEnrollment = require('../../models/classenrollment/classenrollment.model');
 
-exports.getClassIdByCode = async (classCode) => {
+exports.createEnrollmentRequest = async (classCode, userId) => {
     try {
         const classData = await Classes.findOne({ class_code: classCode });
 
@@ -9,14 +9,7 @@ exports.getClassIdByCode = async (classCode) => {
             throw Error('class_not_found');
         }
 
-        return classData._id;
-    } catch (error) {
-        throw error;
-    }
-};
-
-exports.createEnrollmentRequest = async (classId, userId) => {
-    try {
+        const classId = classData._id;
         const enrollment = await ClassEnrollment.create({
             class_id: classId,
             user_id: userId,
@@ -28,6 +21,7 @@ exports.createEnrollmentRequest = async (classId, userId) => {
         throw error;
     }
 };
+
 
 exports.getEnrollmentRequestsByClassId = async (classId) => {
     try {
@@ -46,17 +40,20 @@ exports.updateEnrollmentStatus = async (enrollmentId, status) => {
             { $set: { status: status } },
             { new: true }
         );
-
+        
         if (!updatedEnrollment) {
             throw Error('enrollment_not_found');
         }
 
-        if (status === 2) {
+        if (status === "2") {
+            console.log(status)
+
             const { class_id, user_id } = updatedEnrollment;
+            const student = await User.findById(user_id);
 
             await Classes.findByIdAndUpdate(
                 class_id,
-                { $addToSet: { students: user_id } },
+                { $addToSet: { students: student } },
                 { new: true }
             );
         }

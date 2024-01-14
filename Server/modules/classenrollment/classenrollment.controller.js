@@ -2,8 +2,9 @@ const ClassEnrollService = require('./classenrollment.service');
 
 exports.createEnrollmentRequest = async (req, res) => {
     try {
-        const { classId, userId } = req.body;
-        const enrollment = await ClassEnrollService.createEnrollmentRequest(classId, userId);
+        const { class_code } = req.body;
+        console.log(req.user);
+        const enrollment = await ClassEnrollService.createEnrollmentRequest(class_code, req.user._id);
         res.json(enrollment);
     } catch (error) {
         res.status(500).json({ error: error.message });
