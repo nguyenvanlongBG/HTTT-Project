@@ -33,7 +33,7 @@ exports.getExamWithQuestionsAndAnswers = async (req, res) => {
 exports.getExamByPeriod = async (req, res) => {
   try {
     const { examPeriodId } = req.params;
-    const exams = await ExamService.getExamByPeriod(examPeriodId, req.user._id);
+    const exams = await ExamService.getExamByPeriod(examPeriodId, req.user._id, req.user.role);
     res.status(200).json(exams);
   } catch (error) {
     console.error('Error fetching exams by exam period and user:', error);
