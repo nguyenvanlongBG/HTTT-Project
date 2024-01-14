@@ -35,3 +35,18 @@ export async function createPeriod(data: any) {
   });
   return response;
 }
+export async function createExamByPeriod(periodID: string) {
+  const response = await request({
+    url: `exam/create-exams/${periodID}`,
+    method: 'post',
+  });
+  return response;
+}
+export async function getExamsByPeriodID(periodID: string) {
+  const response = await request({
+    url: `exam/period/${periodID}`,
+    method: 'get',
+  });
+  if (response) return response as Exam[];
+  return [];
+}

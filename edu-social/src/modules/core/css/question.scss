@@ -16,6 +16,9 @@
   .question-content {
     border: 2px solid #3553637c;
     border-radius: 4px;
+    .choose-level {
+      width: 200px;
+    }
   }
   .answers {
     display: flex;

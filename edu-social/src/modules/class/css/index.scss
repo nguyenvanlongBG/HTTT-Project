@@ -88,12 +88,22 @@
       .member {
         display: flex;
         align-items: center;
-        justify-content: start;
+        justify-content: space-between;
+        padding-right: 8px;
         padding-left: 8px;
         height: 36px;
         border-radius: 8px;
         font-weight: 600;
-        cursor: pointer;
+        .btn-accept {
+          padding: 4px;
+          border-radius: 4px;
+          cursor: pointer;
+        }
+        .btn-accept:hover {
+          background-color: $primary-backgroundcolor-hover;
+          color: white;
+          background-color: rgb(19, 187, 56);
+        }
       }
       .member:hover {
         background-color: $primary-backgroundcolor-hover;
@@ -108,10 +118,17 @@
         border-radius: 8px;
         font-weight: 600;
         cursor: pointer;
-      }
-      .add-member:hover {
-        background-color: $primary-backgroundcolor-hover;
-        color: rgb(59, 88, 133);
+        .input-add-student {
+          border-radius: 4px;
+        }
+        .btn-add-student {
+          padding: 4px;
+          border-radius: 4px;
+        }
+        .btn-add-student:hover {
+          background-color: $primary-backgroundcolor-hover;
+          color: rgb(59, 88, 133);
+        }
       }
     }
   }
