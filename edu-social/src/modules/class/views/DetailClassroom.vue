@@ -30,8 +30,8 @@
                 v-if="checkRole(2)"
                 color="white"
                 text-color="black"
-                label="Sửa đề"
-                @click="() => editExam(period._id)"
+                label="Cập nhật đề thi"
+                @click="() => listExam(period._id)"
               />
               <q-btn
                 v-if="checkRole(1)"
@@ -81,11 +81,19 @@
         ></span>
       </div>
       <div class="members" v-if="isExpandingMember">
-        <div class="member">Nguyễn Văn A</div>
-        <div class="member">Nguyễn Văn B</div>
+        <div class="member" v-for="enroll in enrolls" :key="enroll._id">
+          <div>{{ enroll._id }}</div>
+          <div class="btn-accept" @click="acceptEnroll(enroll._id)">Duyệt</div>
+        </div>
         <div class="add-member">
-          <q-icon name="add_circle_outline" size="20px"></q-icon>
-          <span>Thêm thành viên</span>
+          <input
+            class="input-add-student"
+            placeholder="Email học sinh"
+            v-model="studentEmail"
+          />
+          <span class="btn-add-student" @click="addStudentToClass"
+            >Thêm học sinh</span
+          >
         </div>
       </div>
     </div>
@@ -98,11 +106,16 @@ import {
   getPeriodsByClassID,
   getExamByPeriodID,
 } from '../services/classroomService';
-import { createPeriod } from 'src/modules/exam/services/examService';
+import {
+  createPeriod,
+  createExamByPeriod,
+} from 'src/modules/exam/services/examService';
+import { addStudent, acceptRequestToClass } from '../services/classroomService';
 import { getUser } from 'src/modules/core/utils/cookies';
 import router from '../../../router/index';
 import { useQuasar } from 'quasar';
 import PopupCreatePeriod from 'src/modules/exam/components/PopupCreateExam.vue';
+import PopupChooseExam from 'src/modules/exam/components/PopupChooseExam.vue';
 export default {
   name: 'DetailClassroom',
   components: { AvatarComponent },
@@ -114,8 +127,20 @@ export default {
   },
   setup() {
     const classID = ref('');
+    const studentEmail = ref('');
     const isExpandingMember = ref(false);
     const periods = ref([]);
+    const enrolls = ref([
+      {
+        _id: '65a406406cafd56fc6b56467',
+        class_id: '659c0b93e2127106a4eb7662',
+        user_id: '658ff9259b8009704d8f3471',
+        status: 1,
+        createdAt: '2024-01-14T16:05:20.292Z',
+        updatedAt: '2024-01-14T16:05:20.292Z',
+        __v: 0,
+      },
+    ]);
     const $q = useQuasar();
     function changeStatusExpand() {
       isExpandingMember.value = !isExpandingMember.value;
@@ -137,22 +162,15 @@ export default {
         }
       }
     }
-    async function editExam(periodID: string) {
-      const exams = await getExamByPeriodID(periodID);
-      if (exams && exams[0]) {
-        const exam = exams[0];
-        if (exam && exam._id) {
-          router.push({
-            name: 'exam',
-            params: {
-              id: exam._id,
-            },
-            query: {
-              editMode: 2,
-            },
-          });
-        }
-      }
+    async function listExam(periodID: string) {
+      $q.dialog({
+        component: PopupChooseExam,
+        componentProps: {
+          periodID: periodID,
+        },
+      }).onCancel(() => {
+        console.log('Cancel');
+      });
     }
     async function historyExam(periodID: string) {
       const exams = await getExamByPeriodID(periodID);
@@ -194,16 +212,30 @@ export default {
           console.log('Cancel');
         });
     }
+    async function addStudentToClass() {
+      await addStudent(classID.value, studentEmail.value);
+      studentEmail.value = '';
+    }
+    async function acceptEnroll(enrollID: string) {
+      const response = await acceptRequestToClass(enrollID);
+      if (response) {
+        enrolls.value = enrolls.value.filter((en) => en._id != enrollID);
+      }
+    }
     return {
+      studentEmail,
       classID,
       periods,
       doExam,
-      editExam,
+      listExam,
       historyExam,
       isExpandingMember,
       changeStatusExpand,
       openCreatePeriod,
       checkRole,
+      enrolls,
+      addStudentToClass,
+      acceptEnroll,
     };
   },
 };

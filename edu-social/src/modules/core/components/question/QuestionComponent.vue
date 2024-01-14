@@ -27,6 +27,15 @@
       />
     </div>
     <div class="question-content">
+      <div class="choose-level" v-if="isEdit">
+        <q-select
+          v-model="level"
+          :options="levels"
+          option-label="name"
+          filled
+          label="Chọn mức độ"
+        />
+      </div>
       <EditorComponent
         v-model:content="questionLocal.question.description"
         :isReadonly="!isEdit"

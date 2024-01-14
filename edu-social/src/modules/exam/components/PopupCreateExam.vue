@@ -24,15 +24,48 @@
               :readonly="true"
               @click="chooseTimeFinish(finishTime)"
             />
+            <div class="format-exam">
+              <div>Format đề</div>
+              <div class="detail-format-exam">
+                <div class="number-question-level-block">
+                  <label class="label-level">Nhận biết</label>
+                  <input
+                    class="number-question-level"
+                    v-model="easyLevel"
+                    type="number"
+                  />
+                </div>
+                <div class="number-question-level-block">
+                  <label class="label-level">Thông hiểu</label>
+                  <input
+                    class="number-question-level"
+                    v-model="mediumLevel"
+                    type="number"
+                  />
+                </div>
+                <div class="number-question-level-block">
+                  <label class="label-level">Vận dụng</label>
+                  <input
+                    class="number-question-level"
+                    v-model="highLevel"
+                    type="number"
+                  />
+                </div>
+                <div class="number-question-level-block">
+                  <label class="label-level">Vận dụng cao</label>
+                  <input
+                    class="number-question-level"
+                    v-model="highestLevel"
+                    type="number"
+                  />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
       <div class="footer">
-        <EButton
-          placeholder="Tạo lớp học"
-          :label="$t('button.save')"
-          @click="createPeriod"
-        />
+        <EButton :label="$t('button.save')" @click="createPeriod" />
         <EButton :label="$t('button.cancel')" @click="cancel" />
       </div>
     </div>
@@ -52,6 +85,10 @@ export default defineComponent({
     const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } =
       useDialogPluginComponent();
     const periodName = ref('');
+    const easyLevel = ref(0);
+    const mediumLevel = ref(0);
+    const highLevel = ref(0);
+    const highestLevel = ref(0);
     const startTime = ref('');
     const finishTime = ref('');
     const $q = useQuasar();
@@ -86,10 +123,20 @@ export default defineComponent({
         exam_period_name: periodName.value,
         startTime: startTime.value,
         finishTime: finishTime.value,
+        exam_format: {
+          level1: easyLevel,
+          level2: mediumLevel,
+          level3: highLevel,
+          level4: highestLevel,
+        },
       };
       onDialogOK(data);
     }
     return {
+      easyLevel,
+      mediumLevel,
+      highLevel,
+      highestLevel,
       startTime,
       finishTime,
       periodName,
@@ -137,6 +184,24 @@ export default defineComponent({
       display: flex;
       flex-direction: column;
       row-gap: 8px;
+      .format-exam {
+        display: flex;
+        flex-direction: column;
+        .detail-format-exam {
+          display: flex;
+          justify-content: space-between;
+          .number-question-level-block {
+            display: flex;
+            .label-level {
+              display: block;
+              width: 100px;
+            }
+            .number-question-level {
+              width: 75px;
+            }
+          }
+        }
+      }
     }
   }
   .footer {

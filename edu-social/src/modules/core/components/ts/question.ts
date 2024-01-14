@@ -2,7 +2,7 @@ import { defineComponent, ref } from 'vue';
 import EditorComponent from '../../components/rich-editor/EditorComponent.vue';
 import { Answer, Question, QuestionWithAnswer } from '../../models';
 import { ModeExam, ModeQuestion } from '../../enums/Menu';
-import { updateQuestion } from '../../services';
+import { updateQuestion, createQuestion } from '../../services';
 import commonFunction from '../../commonFunction';
 export default defineComponent({
   name: 'QuestionComponent',
@@ -11,7 +11,7 @@ export default defineComponent({
   },
   props: {
     question: {
-      type: Object as () => Question,
+      type: Object as () => QuestionWithAnswer,
       required: true,
     },
     statusEdit: {
@@ -29,10 +29,17 @@ export default defineComponent({
       required: false,
       default: ModeQuestion.DO, // Câu hỏi làm bài
     },
+    subjectID: {
+      type: String,
+      required: false,
+      default: '6590176ba57e454f49e4ea25',
+    },
   },
   emits: ['update:question', 'update:answer'],
   created() {
-    this.questionLocal = JSON.parse(JSON.stringify(this.question));
+    this.questionLocal = JSON.parse(
+      JSON.stringify(this.question)
+    ) as QuestionWithAnswer;
     if (this.mode == ModeQuestion.DO) {
       this.isShowResult = false;
     } else if (this.mode == ModeQuestion.EDIT) {
@@ -41,6 +48,9 @@ export default defineComponent({
     } else if (this.mode == ModeQuestion.HISTORY) {
       this.isShowResult = true;
       this.isShowAnswer = true;
+    }
+    if (this.statusEdit) {
+      this.isEdit = true;
     }
   },
   setup(props, ctx) {
@@ -51,11 +61,29 @@ export default defineComponent({
     const questionLocal = ref({} as QuestionWithAnswer);
     const isShowResult = ref(false);
     const isShowAnswer = ref(false);
+    const level = ref(1);
+    const levels = ref([
+      {
+        value: 1,
+        name: 'Nhận biết',
+      },
+      {
+        value: 2,
+        name: 'Thông hiểu',
+      },
+      {
+        value: 3,
+        name: 'Vận dụng',
+      },
+      {
+        value: 4,
+        name: 'Vận dụng cao',
+      },
+    ]);
     function createAnswer() {
       const newChoose = commonFunction.createChoose('');
       questionLocal.value.answers.push(newChoose);
       console.log(newChoose, questionLocal);
-      ctx.emit('update:question');
     }
     function isActive(choose: Answer) {
       if (isShowResult.value) {
@@ -103,7 +131,18 @@ export default defineComponent({
         questionData: questionLocal.value.question,
         answersData: answers,
       };
-      await updateQuestion(questionLocal.value.question._id, data);
+      if (questionLocal.value.question._id) {
+        const response = await updateQuestion(
+          questionLocal.value.question._id,
+          data
+        );
+        ctx.emit('update:question', response);
+      } else {
+        delete data.questionData._id;
+        data.questionData.subject_id = props.subjectID;
+        const response = await createQuestion(data);
+        ctx.emit('update:question', response);
+      }
       this.changeEditStatus(false);
     }
     function rollBackDataQuestion() {
@@ -115,6 +154,8 @@ export default defineComponent({
       });
     }
     return {
+      level,
+      levels,
       isRefresh,
       questionLocal,
       rollBackDataQuestion,

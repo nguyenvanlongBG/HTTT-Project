@@ -49,6 +49,11 @@ const routes: RouteRecordRaw[] = [
           },
         ],
       },
+      {
+        name: 'bank',
+        path: 'bank',
+        component: () => import('../modules/bank/views/BankQuestion.vue'),
+      },
     ],
   },
 

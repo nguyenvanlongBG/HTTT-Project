@@ -58,3 +58,43 @@ export async function getExamByPeriodID(periodID: string) {
   }
   return [];
 }
+export async function requestJoinClass(classCode: string) {
+  const response = await request({
+    url: `enrollment/${classCode}`,
+    method: 'post',
+    data: {
+      class_code: classCode,
+    },
+  });
+  if (response) {
+    return response;
+  }
+  return null;
+}
+export async function addStudent(classID: string, email: string) {
+  const response = await request({
+    url: `classes/${classID}/add-student`,
+    method: 'post',
+    data: {
+      emails: [email],
+    },
+  });
+  if (response) {
+    return response;
+  }
+  return null;
+}
+export async function acceptRequestToClass(enrollID: string) {
+  const response = await request({
+    url: 'enrollment/update-status',
+    method: 'put',
+    data: {
+      enrollmentId: enrollID,
+      status: '2',
+    },
+  });
+  if (response) {
+    return response;
+  }
+  return null;
+}

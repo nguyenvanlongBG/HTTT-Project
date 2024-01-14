@@ -9,7 +9,9 @@
         ></i>
         <ul v-if="displayNavClassroom" class="menu-action-classroom">
           <li>
-            <div class="action-classroom">Chia sẻ</div>
+            <div class="action-classroom" @click.stop="joinClassroom">
+              Xin vào lớp
+            </div>
           </li>
           <li>
             <div class="action-classroom">Rời lớp</div>
@@ -30,6 +32,7 @@
 import { ref } from 'vue';
 import router from 'src/router';
 import { Classroom } from '../models';
+import { requestJoinClass } from '../services/classroomService';
 export default {
   name: 'ClassroomComponent',
   props: {
@@ -51,10 +54,14 @@ export default {
         },
       });
     }
+    async function joinClassroom() {
+      await requestJoinClass(props.classroom.class_code);
+    }
     return {
       displayNavClassroom,
       displayActionClassroom,
       goToClassroom,
+      joinClassroom,
     };
   },
 };

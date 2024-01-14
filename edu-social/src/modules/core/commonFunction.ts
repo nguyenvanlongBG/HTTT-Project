@@ -6,7 +6,7 @@ class CommonFunction {
     const newQuestion: QuestionWithAnswer = {
       answers: [],
       question: {
-        _id: this.generateID(),
+        _id: '',
         createdAt: '',
         created_by: '',
         description: '',
