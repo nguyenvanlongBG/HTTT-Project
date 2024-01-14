@@ -20,27 +20,37 @@ exports.getAllQuestionsWithAnswers = async (userRole, userId) => {
 
   if (userRole === 2) {
     // Giáo viên
-    questionsWithAnswers = await Question.find({
+    const questions = await Question.find({
       $or: [
-        { created_by: userId }, // Câu hỏi của giáo viên
-        { is_public: true } // Câu hỏi được set is_public true
+        { created_by: userId}, // Câu hỏi của giáo viên
+        { is_public: true} // Câu hỏi được set is_public true
       ]
     });
 
-    // Lấy câu trả lời cho mỗi câu hỏi
-    for (const question of questionsWithAnswers) {
-      const answers = await Answer.find({ question_id: question._id });
-      question.answers = answers;
-    }
+    questionsWithAnswers = await Promise.all(
+      questions.map(async (question) => {
+        // Lấy danh sách câu trả lời của câu hỏi
+        const answers = await Answer.find({ question_id: question._id });
+        return {
+          question: question,
+          answers: answers,
+        };
+      })
+    );
   } else {
     // Học sinh
-    questionsWithAnswers = await Question.find({ is_public: true });
+    const questions = await Question.find({ is_public: true});
 
-    // Lấy câu trả lời cho mỗi câu hỏi
-    for (const question of questionsWithAnswers) {
-      const answers = await Answer.find({ question_id: question._id });
-      question.answers = answers;
-    }
+    questionsWithAnswers = await Promise.all(
+      questions.map(async (question) => {
+        // Lấy danh sách câu trả lời của câu hỏi
+        const answers = await Answer.find({ question_id: question._id });
+        return {
+          question: question,
+          answers: answers,
+        };
+      })
+    );
   }
 
   return questionsWithAnswers;
@@ -51,27 +61,37 @@ exports.getQuestionsBySubject = async (userRole, userId, subjectId) => {
 
   if (userRole === 2) {
     // Giáo viên
-    questionsWithAnswers = await Question.find({
+    const questions = await Question.find({
       $or: [
         { created_by: userId, subject_id: subjectId }, // Câu hỏi của giáo viên
         { is_public: true, subject_id: subjectId } // Câu hỏi được set is_public true
       ]
     });
 
-    // Lấy câu trả lời cho mỗi câu hỏi
-    for (const question of questionsWithAnswers) {
-      const answers = await Answer.find({ question_id: question._id });
-      question.answers = answers;
-    }
+    questionsWithAnswers = await Promise.all(
+      questions.map(async (question) => {
+        // Lấy danh sách câu trả lời của câu hỏi
+        const answers = await Answer.find({ question_id: question._id });
+        return {
+          question: question,
+          answers: answers,
+        };
+      })
+    );
   } else {
     // Học sinh
-    questionsWithAnswers = await Question.find({ is_public: true, subject_id: subjectId });
+    const questions = await Question.find({ is_public: true, subject_id: subjectId });
 
-    // Lấy câu trả lời cho mỗi câu hỏi
-    for (const question of questionsWithAnswers) {
-      const answers = await Answer.find({ question_id: question._id });
-      question.answers = answers;
-    }
+    questionsWithAnswers = await Promise.all(
+      questions.map(async (question) => {
+        // Lấy danh sách câu trả lời của câu hỏi
+        const answers = await Answer.find({ question_id: question._id });
+        return {
+          question: question,
+          answers: answers,
+        };
+      })
+    );
   }
 
   return questionsWithAnswers;
