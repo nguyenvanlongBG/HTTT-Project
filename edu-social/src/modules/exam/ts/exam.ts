@@ -1,5 +1,6 @@
 import { defineComponent, ref } from 'vue';
 import QuestionComponent from '../../core/components/question/QuestionComponent.vue';
+import CommonFunction from '../../core/commonFunction';
 import {
   getAnswersUser,
   getExamByID,
@@ -7,7 +8,11 @@ import {
 } from '../services/examService';
 import { useExamStore } from '../stores';
 import { storeToRefs } from 'pinia';
-import { AnswerUser, Question } from 'src/modules/core/models';
+import {
+  AnswerUser,
+  Question,
+  QuestionWithAnswer,
+} from 'src/modules/core/models';
 export default defineComponent({
   components: {
     QuestionComponent,
@@ -20,7 +25,8 @@ export default defineComponent({
     },
   },
   async created() {
-    const response = await getExamByID('');
+    const examID = this.$route.params.id as string;
+    const response = await getExamByID(examID);
     if (response && response.exam) {
       this.exam = response.exam;
     }
@@ -28,19 +34,34 @@ export default defineComponent({
       this.questions = response.questionsWithAnswers;
     }
     if (this.editMode == 3) {
-      const response = await getAnswersUser();
-      if (response && response.student_answers) {
-        this.answersUser = response.student_answers;
+      const user = CommonFunction.getCurrentUser();
+      if (user) {
+        const response = await getAnswersUser(user.id);
+        if (response && response.student_answers) {
+          this.answersUser = response.student_answers;
+        }
       }
     }
   },
   setup() {
-    const questions = ref([] as Question[]);
+    const questions = ref([] as QuestionWithAnswer[]);
     const exam = ref({});
     const examStore = useExamStore();
     const { getQuestions } = storeToRefs(examStore);
     const hasRoleEdit = ref(true);
     const answersUser = ref([] as AnswerUser[]);
+    function changeResult(ansID: string, question: QuestionWithAnswer) {
+      console.log(ansID, question);
+      if (question.answers && question.answers.length) {
+        const answer = question.answers.forEach((ans) => {
+          if (ans._id == ansID) {
+            ans.is_correct = true;
+          } else {
+            ans.is_correct = false;
+          }
+        });
+      }
+    }
     async function submit() {
       const data = {};
       data.exam_id = exam.value._id;
@@ -58,6 +79,10 @@ export default defineComponent({
       }
       await createSubmission(data);
     }
+    function createQuestion() {
+      const newQuestion = CommonFunction.createQuestion();
+      questions.value.push(newQuestion);
+    }
     return {
       exam,
       questions,
@@ -66,6 +91,8 @@ export default defineComponent({
       hasRoleEdit,
       answersUser,
       submit,
+      changeResult,
+      createQuestion,
     };
   },
 });

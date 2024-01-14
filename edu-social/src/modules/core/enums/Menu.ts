@@ -7,3 +7,8 @@ export enum ModeExam {
   EDIT = 2,
   HISTORY = 3,
 }
+export enum ModeQuestion {
+  DO = 1,
+  EDIT = 2,
+  HISTORY = 3,
+}

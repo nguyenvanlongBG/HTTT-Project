@@ -1,5 +1,5 @@
 <template>
-  <div class="container-question">
+  <div class="container-question" v-if="!isRefresh">
     <div class="toolbar-question">
       <q-btn
         rounded
@@ -11,27 +11,35 @@
       />
       <q-btn
         rounded
-        label="Đóng"
+        label="Lưu"
         size="16px"
         color="teal"
-        @click="changeEditStatus(false)"
+        @click="saveDataQuestion()"
+        v-if="isEdit && statusEdit"
+      />
+      <q-btn
+        rounded
+        label="Quay lại"
+        size="16px"
+        color="teal"
+        @click="rollBackDataQuestion()"
         v-if="isEdit && statusEdit"
       />
     </div>
     <div class="question-content">
       <EditorComponent
-        :content="question.question.description"
+        v-model:content="questionLocal.question.description"
         :isReadonly="!isEdit"
       />
     </div>
-    <q-list class="answers" v-if="question.question.question_type == 1">
+    <q-list class="answers" v-if="questionLocal.question.question_type == 1">
       <q-item
         :active="isActive(choose) ? true : false"
         :active-class="isActive(choose)"
         class="answer"
         color="teal"
         tag="label"
-        v-for="choose in question.answers"
+        v-for="choose in questionLocal.answers"
         :key="choose._id"
         v-ripple
         @click="updateChooseAnswer(choose._id)"
@@ -46,7 +54,7 @@
         <q-item-section>
           <div class="content-answer">
             <EditorComponent
-              :content="choose.description"
+              v-model:content="choose.description"
               :isReadonly="!isEdit"
             />
           </div>
@@ -57,14 +65,14 @@
       </div>
     </q-list>
 
-    <q-list class="answers" v-if="question.question.question_type == 2">
+    <q-list class="answers" v-if="questionLocal.question.question_type == 2">
       <q-item
         :active="results.includes(answer._id) ? true : false"
         active-class="result"
         class="answer"
         color="teal"
         tag="label"
-        v-for="answer in question.answers"
+        v-for="answer in questionLocal.answers"
         :key="answer._id"
         v-ripple
       >

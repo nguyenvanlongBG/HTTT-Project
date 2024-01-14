@@ -1,5 +1,5 @@
 <template>
-  <q-btn class="btn-custom">{{ label }}</q-btn>
+  <q-btn :class="classProp">{{ label }}</q-btn>
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue';
@@ -11,6 +11,11 @@ export default defineComponent({
       type: String,
       required: false,
       default: 'Button',
+    },
+    classProp: {
+      type: String,
+      required: false,
+      default: 'btn-custom',
     },
   },
 });

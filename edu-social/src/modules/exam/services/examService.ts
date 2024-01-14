@@ -2,7 +2,7 @@ import request from '../../core/utils/request';
 
 export async function getExamByID(examID: string) {
   const response = await request({
-    url: 'exam/65905053dc5fb4428295a053',
+    url: `exam/${examID}`,
     method: 'get',
   });
   if (response && response.content) {
@@ -11,9 +11,9 @@ export async function getExamByID(examID: string) {
   return [];
 }
 
-export async function getAnswersUser() {
+export async function getAnswersUser(userID: string) {
   const response = await request({
-    url: 'submission/exam-period/659048ada1718a77667f89b9',
+    url: $`submission/user/${userID}`,
     method: 'get',
   });
   if (response && response[0]) return response[0];
@@ -26,4 +26,12 @@ export async function createSubmission(data: any) {
     method: 'post',
     data: data,
   });
+}
+export async function createPeriod(data: any) {
+  const response = await request({
+    url: 'period/create',
+    method: 'post',
+    data: data,
+  });
+  return response;
 }

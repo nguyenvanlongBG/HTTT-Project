@@ -22,7 +22,7 @@
       <div class="box-image-classroom">
         <img class="image-classroom" src="../assets/picture/classroom.png" />
       </div>
-      <div class="name-classroom">Lớp cô Hoa</div>
+      <div class="name-classroom">{{ classroom.class_name }}</div>
     </div>
   </div>
 </template>

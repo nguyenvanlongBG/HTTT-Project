@@ -2,7 +2,12 @@
   <div class="container-exam">
     <div class="body">
       <div class="toolbar-exam" v-if="editMode == 2">
-        <q-btn color="primary" class="create-question" label="Thêm câu hỏi" />
+        <q-btn
+          color="primary"
+          class="create-question"
+          label="Thêm câu hỏi"
+          @click="createQuestion()"
+        />
       </div>
       <div v-if="editMode == 1">
         <QuestionComponent
@@ -19,7 +24,8 @@
           :question="question"
           :statusEdit="hasRoleEdit"
           :isShowResult="true"
-          v-model:answer="answersUser[index]"
+          :answer="answersUser[index]"
+          :mode="editMode"
         />
       </div>
       <div v-if="editMode == 3">
@@ -27,9 +33,11 @@
           v-for="(question, index) in questions"
           :key="question._id"
           :question="question"
+          :statusEdit="false"
           :isShowAnswer="true"
           :isShowResult="true"
           :answer="answersUser[index]"
+          :mode="editMode"
         />
       </div>
       <div class="toolbar-exam" v-if="editMode == 1">

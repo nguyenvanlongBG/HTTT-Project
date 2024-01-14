@@ -1,6 +1,18 @@
 import request from '../../core/utils/request';
 import { Classroom } from '../models';
 
+export async function createClassroom(data = {}) {
+  const response = await request({
+    url: '/classes',
+    method: 'post',
+    data: data,
+  });
+  if (response && response.content) {
+    return response.content as Classroom;
+  }
+  return null;
+}
+
 export async function getClassByUser(userId: string) {
   const response = await request({
     url: `/classes/user/${userId}`,
@@ -28,6 +40,17 @@ export async function getDetailClass(classId: string) {
 export async function getPeriodsByClassID(classID: string) {
   const response = await request({
     url: `period/class/${classID}`,
+    method: 'get',
+  });
+  if (response) {
+    return response;
+  }
+  return [];
+}
+
+export async function getExamByPeriodID(periodID: string) {
+  const response = await request({
+    url: `exam/period/${periodID}`,
     method: 'get',
   });
   if (response) {
