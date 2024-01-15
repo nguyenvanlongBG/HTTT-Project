@@ -52,8 +52,14 @@
             v-model="user.password"
             placeholder="Mật khẩu"
           />
-          <label>Vai trò</label>
-          <div class="role">
+          <label>Điện thoại</label>
+          <input
+            type="text"
+            id="phone"
+            v-model="user.phone"
+            placeholder="Điện thoại"
+          />
+          <!-- <div class="role">
             <div class="radio-role">
               <input
                 type="radio"
@@ -75,8 +81,8 @@
                 class="radio"
               />
               <label for="role_teacher" class="label-role">Giáo viên</label>
-            </div>
-          </div>
+            </div> -->
+          <!-- </div> -->
           <div class="button-register" @click="handleSubmit">Đăng ký</div>
         </div>
       </div>
@@ -86,6 +92,7 @@
 <script>
 import { ref } from 'vue';
 import { register } from '../services/authen';
+import router from 'src/router';
 
 export default {
   name: 'RegisterComponent',
@@ -98,13 +105,13 @@ export default {
     });
     async function handleSubmit() {
       const data = {
-        name: name.value,
-        email: email.value,
-        password: password.value,
-        phone: '',
+        name: user.value.name,
+        email: user.value.email,
+        password: user.value.password,
+        phone: user.value.phone,
       };
       const response = await register(data);
-      if (response.success) {
+      if (response && response.success) {
         router.push({ name: 'login' });
       }
     }
