@@ -46,10 +46,13 @@
       </div>
     </div>
     <div class="toolbar-class">
-      <div>
-        <q-input rounded outlined v-model="text">
-          <template v-slot:append> </template>
-        </q-input>
+      <div class="main-info-class">
+        <div class="classroom-name">
+          {{ classroom ? classroom.class_name : '' }}
+        </div>
+        <div class="classroom-code">
+          Mã lớp học: {{ classroom ? classroom.class_code : '' }}
+        </div>
       </div>
       <div class="item">
         <div>
@@ -61,7 +64,7 @@
         </div>
         <span>Kỳ thi</span>
       </div>
-      <div class="item">
+      <div class="item" @click="navigationToReport">
         <div>
           <img
             class="icon-32px"
@@ -69,7 +72,7 @@
             alt=""
           />
         </div>
-        <span>Tài liệu</span>
+        <span>Báo cáo</span>
       </div>
       <div class="item expand" @click="changeStatusExpand">
         <span>Thành viên</span>
@@ -83,11 +86,19 @@
       <div class="members" v-if="isExpandingMember">
         <div class="member" v-for="enroll in enrolls" :key="enroll._id">
           <div>{{ enroll.student.name ? enroll.student.name : '' }}</div>
-          <div
-            class="btn-accept"
-            @click="acceptEnroll(enroll.pendingRequests._id)"
-          >
-            Duyệt
+          <div class="act-status-enroll">
+            <div
+              class="btn-reject"
+              @click="handleEnroll('3', enroll.pendingRequests._id)"
+            >
+              Từ chối
+            </div>
+            <div
+              class="btn-accept"
+              @click="handleEnroll('2', enroll.pendingRequests._id)"
+            >
+              Duyệt
+            </div>
           </div>
         </div>
         <div class="add-member">
@@ -117,8 +128,9 @@ import {
 } from 'src/modules/exam/services/examService';
 import {
   addStudent,
-  acceptRequestToClass,
+  handleEnrollRequest,
   getEnrollsInClass,
+  getDetailClass,
 } from '../services/classroomService';
 import { getUser } from 'src/modules/core/utils/cookies';
 import router from '../../../router/index';
@@ -133,10 +145,12 @@ export default {
     if (this.classID) {
       this.periods = await getPeriodsByClassID(this.classID);
       this.enrolls = await getEnrollsInClass(this.classID);
+      this.classroom = await getDetailClass(this.classID);
     }
   },
   setup() {
     const classID = ref('');
+    const classroom = ref(null);
     const studentEmail = ref('');
     const isExpandingMember = ref(false);
     const periods = ref([]);
@@ -216,15 +230,25 @@ export default {
       await addStudent(classID.value, studentEmail.value);
       studentEmail.value = '';
     }
-    async function acceptEnroll(enrollID: string) {
-      const response = await acceptRequestToClass(enrollID);
+    async function handleEnroll(status: string, enrollID: string) {
+      const response = await handleEnrollRequest(status, enrollID);
       if (response) {
         enrolls.value = enrolls.value.filter(
           (en) => en.pendingRequests._id != enrollID
         );
       }
     }
+    function navigationToReport() {
+      router.push({
+        name: 'reportClassroom',
+        params: {
+          classID: classID.value,
+        },
+      });
+    }
     return {
+      navigationToReport,
+      classroom,
       studentEmail,
       classID,
       periods,
@@ -237,7 +261,7 @@ export default {
       checkRole,
       enrolls,
       addStudentToClass,
-      acceptEnroll,
+      handleEnroll,
     };
   },
 };

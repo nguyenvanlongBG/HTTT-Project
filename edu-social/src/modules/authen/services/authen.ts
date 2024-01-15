@@ -18,3 +18,11 @@ export async function login(email: string, password: string) {
   }
   return response;
 }
+export async function register(data: any) {
+  const response = await request({
+    url: '/user/register',
+    method: 'post',
+    data: data,
+  });
+  return response;
+}

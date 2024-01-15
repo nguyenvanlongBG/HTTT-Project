@@ -85,6 +85,7 @@
 </template>
 <script>
 import { ref } from 'vue';
+import { register } from '../services/authen';
 
 export default {
   name: 'RegisterComponent',
@@ -95,8 +96,21 @@ export default {
       password: '',
       role: null,
     });
+    async function handleSubmit() {
+      const data = {
+        name: name.value,
+        email: email.value,
+        password: password.value,
+        phone: '',
+      };
+      const response = await register(data);
+      if (response.success) {
+        router.push({ name: 'login' });
+      }
+    }
     return {
       user,
+      handleSubmit,
     };
   },
 };
@@ -285,6 +299,7 @@ input::-moz-focus-inner {
   margin-top: 40px;
   transition: color 300ms;
   font-weight: bold;
+  cursor: pointer;
 }
 
 .button:hover {

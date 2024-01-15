@@ -4,7 +4,7 @@
       <span class="edu">Edu</span>
       <span class="social">Social</span>
     </div>
-    <div v-if="pageFocus == Menu.FORUM">
+    <div>
       <div class="main-menu-block">
         <ul class="main-menu">
           <li class="item-menu" @click="navigateToPage(1, null)">
@@ -19,6 +19,16 @@
             </div>
             <span class="title-menu-item">Thư viện</span>
           </li>
+          <li class="item-menu" @click="navigateToPage(7, null)">
+            <div class="block-img-menu-item">
+              <img
+                src="../../assets/pictures/library.png"
+                alt=""
+                v-if="checkRole(2)"
+              />
+            </div>
+            <span class="title-menu-item">Ngân hàng câu hỏi</span>
+          </li>
           <li class="item-menu">
             <div class="block-img-menu-item">
               <img src="../../assets/pictures/exam.png" alt="" />
@@ -31,7 +41,7 @@
             </div>
             <span class="title-menu-item">Ôn tập</span>
           </li>
-          <li class="item-menu">
+          <li class="item-menu" @click="navigateToPage(2, null)">
             <div class="block-img-menu-item">
               <img src="../../assets/pictures/classroom.png" alt="" />
             </div>

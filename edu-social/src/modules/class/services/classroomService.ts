@@ -32,8 +32,8 @@ export async function getDetailClass(classId: string) {
     method: 'get',
   });
   if (response && response.content) {
-    const classrooms: Classroom = response.content as Classroom;
-    return classrooms;
+    const classroom: Classroom = response.content as Classroom;
+    return classroom;
   }
   return null;
 }
@@ -94,17 +94,28 @@ export async function addStudent(classID: string, email: string) {
   }
   return null;
 }
-export async function acceptRequestToClass(enrollID: string) {
+export async function handleEnrollRequest(status: string, enrollID: string) {
   const response = await request({
     url: 'enrollment/update-status',
     method: 'put',
     data: {
       enrollmentId: enrollID,
-      status: '2',
+      status: status,
     },
   });
   if (response) {
     return response;
   }
   return null;
+}
+
+export async function getReportClassroom(classID: string) {
+  const response = await request({
+    url: `/classes/${classID}/students`,
+    method: 'get',
+  });
+  if (response && response.content) {
+    return response.content;
+  }
+  return [];
 }

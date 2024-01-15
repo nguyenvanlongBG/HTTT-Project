@@ -35,6 +35,7 @@ const routes: RouteRecordRaw[] = [
       {
         name: 'class',
         path: 'class',
+        redirect: 'class/',
         children: [
           {
             path: '',
@@ -46,6 +47,12 @@ const routes: RouteRecordRaw[] = [
             name: 'detailClassroom',
             component: () =>
               import('../modules/class/views/DetailClassroom.vue'),
+          },
+          {
+            path: ':classID/report',
+            name: 'reportClassroom',
+            component: () =>
+              import('../modules/class/views/ReportClassroom.vue'),
           },
         ],
       },

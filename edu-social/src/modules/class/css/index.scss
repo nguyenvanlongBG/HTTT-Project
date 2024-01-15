@@ -13,6 +13,8 @@
 .list-classroom {
   display: grid;
   grid-template-columns: 33.33% 33.33% 33.33%;
+  max-height: 516px;
+  overflow-y: auto;
 }
 .container-detail-class {
   display: flex;
@@ -68,6 +70,21 @@
     display: flex;
     flex-direction: column;
     row-gap: 8px;
+    .main-info-class {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      .classroom-name {
+        color: rgb(59, 88, 133);
+        font-size: 24px;
+        font-weight: bold;
+      }
+      .classroom-code {
+        font-size: 18px;
+        color: rgb(59, 88, 133);
+      }
+    }
     .item {
       padding-left: 8px;
       height: 36px;
@@ -98,15 +115,29 @@
         height: 36px;
         border-radius: 8px;
         font-weight: 600;
-        .btn-accept {
-          padding: 4px;
-          border-radius: 4px;
-          cursor: pointer;
-        }
-        .btn-accept:hover {
-          background-color: $primary-backgroundcolor-hover;
-          color: white;
-          background-color: rgb(19, 187, 56);
+        .act-status-enroll {
+          display: flex;
+          column-gap: 4px;
+          .btn-reject {
+            padding: 4px;
+            border-radius: 4px;
+            cursor: pointer;
+          }
+          .btn-reject:hover {
+            background-color: $primary-backgroundcolor-hover;
+            color: white;
+            background-color: rgb(192, 64, 41);
+          }
+          .btn-accept {
+            padding: 4px;
+            border-radius: 4px;
+            cursor: pointer;
+          }
+          .btn-accept:hover {
+            background-color: $primary-backgroundcolor-hover;
+            color: white;
+            background-color: rgb(19, 187, 56);
+          }
         }
       }
       .member:hover {
