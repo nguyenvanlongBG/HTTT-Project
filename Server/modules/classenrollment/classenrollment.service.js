@@ -1,5 +1,6 @@
 const Classes = require('../../models/classes/classes.model');
 const ClassEnrollment = require('../../models/classenrollment/classenrollment.model');
+const User = require('../../models/user/user.model')
 
 exports.createEnrollmentRequest = async (classCode, userId) => {
     try {
@@ -25,7 +26,20 @@ exports.createEnrollmentRequest = async (classCode, userId) => {
 
 exports.getEnrollmentRequestsByClassId = async (classId) => {
     try {
-        const pendingRequests = await ClassEnrollment.find({ class_id: classId, status: 1 });
+        let pendingRequests = await ClassEnrollment.find({ class_id: classId, status: 1 });
+        console.log(pendingRequests);
+
+        if(pendingRequests) { pendingRequests = await Promise.all(
+            pendingRequests.map(async (pendingRequest) => {
+              const student = await User.findById(pendingRequest.user_id);
+              console.log(student);
+              return {
+                pendingRequests: pendingRequest,
+                student: student,
+              };
+            })
+          );
+        };
 
         return pendingRequests;
     } catch (error) {
