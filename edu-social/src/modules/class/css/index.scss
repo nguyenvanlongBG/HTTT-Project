@@ -3,6 +3,10 @@
   .toolbar-action-class {
     padding: 8px;
     display: flex;
+    .join-classroom {
+      display: flex;
+      column-gap: 4px;
+    }
   }
 }
 

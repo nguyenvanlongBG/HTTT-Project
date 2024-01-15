@@ -82,8 +82,13 @@
       </div>
       <div class="members" v-if="isExpandingMember">
         <div class="member" v-for="enroll in enrolls" :key="enroll._id">
-          <div>{{ enroll._id }}</div>
-          <div class="btn-accept" @click="acceptEnroll(enroll._id)">Duyệt</div>
+          <div>{{ enroll.student.name ? enroll.student.name : '' }}</div>
+          <div
+            class="btn-accept"
+            @click="acceptEnroll(enroll.pendingRequests._id)"
+          >
+            Duyệt
+          </div>
         </div>
         <div class="add-member">
           <input
@@ -110,7 +115,11 @@ import {
   createPeriod,
   createExamByPeriod,
 } from 'src/modules/exam/services/examService';
-import { addStudent, acceptRequestToClass } from '../services/classroomService';
+import {
+  addStudent,
+  acceptRequestToClass,
+  getEnrollsInClass,
+} from '../services/classroomService';
 import { getUser } from 'src/modules/core/utils/cookies';
 import router from '../../../router/index';
 import { useQuasar } from 'quasar';
@@ -123,6 +132,7 @@ export default {
     this.classID = this.$route.params.classID;
     if (this.classID) {
       this.periods = await getPeriodsByClassID(this.classID);
+      this.enrolls = await getEnrollsInClass(this.classID);
     }
   },
   setup() {
@@ -130,17 +140,7 @@ export default {
     const studentEmail = ref('');
     const isExpandingMember = ref(false);
     const periods = ref([]);
-    const enrolls = ref([
-      {
-        _id: '65a406406cafd56fc6b56467',
-        class_id: '659c0b93e2127106a4eb7662',
-        user_id: '658ff9259b8009704d8f3471',
-        status: 1,
-        createdAt: '2024-01-14T16:05:20.292Z',
-        updatedAt: '2024-01-14T16:05:20.292Z',
-        __v: 0,
-      },
-    ]);
+    const enrolls = ref([]);
     const $q = useQuasar();
     function changeStatusExpand() {
       isExpandingMember.value = !isExpandingMember.value;
@@ -219,7 +219,9 @@ export default {
     async function acceptEnroll(enrollID: string) {
       const response = await acceptRequestToClass(enrollID);
       if (response) {
-        enrolls.value = enrolls.value.filter((en) => en._id != enrollID);
+        enrolls.value = enrolls.value.filter(
+          (en) => en.pendingRequests._id != enrollID
+        );
       }
     }
     return {

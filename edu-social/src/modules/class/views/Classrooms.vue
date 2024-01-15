@@ -3,11 +3,16 @@
     <h4>Lớp học của bạn</h4>
     <div class="toolbar-action-class">
       <q-btn
+        v-if="checkRole(2)"
         color="primary"
         class="create-question"
         label="Tạo lớp học"
         @click="openCreateClassroom()"
       />
+      <div class="join-classroom" v-if="checkRole(1)">
+        <EInput placeholder="Mã lớp học" v-model:value="classCodeToJoin" />
+        <EButton label="Xin vào lớp" @click="requestJoinClassroom" />
+      </div>
     </div>
     <div class="list-classroom">
       <ClassroomComponent
@@ -22,15 +27,25 @@
 import { ref } from 'vue';
 import ClassroomComponent from '../components/ClassroomComponent.vue';
 import PopupCreateClassroom from './CreateClassroom.vue';
-import { createClassroom, getClassByUser } from '../services/classroomService';
+import {
+  createClassroom,
+  getClassByUser,
+  requestJoinClass,
+} from '../services/classroomService';
 import { getValueByKey } from '../../core/utils/cookies';
 import { Classroom } from '../models';
 import { useQuasar } from 'quasar';
+import { getUser } from 'src/modules/core/utils/cookies';
+
+import EInput from 'src/modules/core/components/input/EInput.vue';
+import EButton from 'src/modules/core/components/button/EButton.vue';
 
 export default {
   name: 'ListClassroom',
   components: {
     ClassroomComponent,
+    EInput,
+    EButton,
   },
   async created() {
     const userID = getValueByKey('userID');
@@ -40,6 +55,7 @@ export default {
   },
   setup() {
     const classrooms = ref([] as Classroom[]);
+    const classCodeToJoin = ref('');
     const $q = useQuasar();
     function openCreateClassroom() {
       $q.dialog({
@@ -51,9 +67,27 @@ export default {
         }
       });
     }
+    async function requestJoinClassroom() {
+      if (classCodeToJoin.value) {
+        const response = await requestJoinClass(classCodeToJoin.value);
+        if (response) {
+          classCodeToJoin.value = '';
+        }
+      }
+    }
+    function checkRole(role: number) {
+      const user = getUser();
+      if (user) {
+        if (user.role == role) return true;
+      }
+      return false;
+    }
     return {
       classrooms,
+      classCodeToJoin,
       openCreateClassroom,
+      requestJoinClassroom,
+      checkRole,
     };
   },
 };

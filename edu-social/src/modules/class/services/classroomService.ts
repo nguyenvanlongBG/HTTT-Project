@@ -58,9 +58,19 @@ export async function getExamByPeriodID(periodID: string) {
   }
   return [];
 }
+export async function getEnrollsInClass(classID: string) {
+  const response = await request({
+    url: `enrollment/${classID}`,
+    method: 'get',
+  });
+  if (response) {
+    return response;
+  }
+  return [];
+}
 export async function requestJoinClass(classCode: string) {
   const response = await request({
-    url: `enrollment/${classCode}`,
+    url: 'enrollment',
     method: 'post',
     data: {
       class_code: classCode,
