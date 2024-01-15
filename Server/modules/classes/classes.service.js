@@ -1,5 +1,8 @@
 const Classes = require("../../models/classes/classes.model");
 const User = require("../../models/user/user.model");
+const ExamPeriod = require('../../models/examinationperiod/examperiod.model');
+const Submission = require('../../models/submission/submission.model');
+const Exam = require('../../models/exam/exam.model');
 
 const generateUniqueClassCode = async () => {
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -130,10 +133,51 @@ exports.removeStudentFromClass = async (id, studentId) => {
 exports.getStudentsInClass = async (classId) => {
     try {
         let classData = await Classes.findById(classId).populate('students');
+        let periods = await ExamPeriod.find({ class_id: classId });
+
         if (!classData) {
             throw Error('class_not_found');
         }
-        return classData.students;
+
+        let students1 = [...classData.students];
+
+        // Tạo đối tượng để lưu trữ thông tin điểm của học sinh
+        let studentScores = {};
+
+        // Tạo mảng để lưu trữ tên các kỳ thi
+        let periodNames = periods.map(period => period.exam_period_name);
+
+        for (const period of periods) {
+            if (period.students && period.students.length > 0) {
+                const commonStudents = students1.filter(student => period.students.includes(student._id.toString()));
+
+                // Lưu thông tin điểm của học sinh nếu tham gia kỳ thi
+                for (const student1 of commonStudents) {
+                    const examId = await Exam.findOne({ exam_period_id: period._id, user_id: student1._id }).select('_id');
+                    const submission = await Submission.findOne({ user_id: student1._id, exam_id: examId }).select('score');
+
+                    // Lưu điểm vào đối tượng studentScores
+                    if (!studentScores[student1._id.toString()]) {
+                        studentScores[student1._id.toString()] = { name: student1.name, scores: {} };
+                    }
+
+                    studentScores[student1._id.toString()].scores[period.exam_period_name] = submission ? submission.score : null;
+                }
+            }
+        }
+
+        // Kiểm tra và thêm học sinh không tham gia vào kết quả
+        for (const student1 of students1) {
+            const studentIdString = student1._id.toString();
+            if (!studentScores[studentIdString]) {
+                studentScores[studentIdString] = { name: student1.name, scores: {} };
+                for (const period of periods) {
+                    studentScores[studentIdString].scores[period.exam_period_name] = null;
+                }
+            }
+        }
+
+        return { studentScores, periods: periodNames };
     } catch (error) {
         throw error;
     }
