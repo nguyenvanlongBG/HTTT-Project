@@ -27,14 +27,30 @@
       />
     </div>
     <div class="question-content">
-      <div class="choose-level" v-if="isEdit">
-        <q-select
-          v-model="level"
-          :options="levels"
-          option-label="name"
-          filled
-          label="Chọn mức độ"
-        />
+      <div class="select-subject-level" v-if="isEdit">
+        <div class="choose-subject">
+          <q-select
+            v-model="questionLocal.question.subject_id"
+            :options="subjects"
+            option-label="subject_name"
+            :emit-value="true"
+            option-value="subject_id"
+            filled
+            label="Chọn môn học"
+          />
+        </div>
+
+        <div class="choose-level">
+          <q-select
+            v-model="questionLocal.question.level"
+            :options="levels"
+            option-label="name"
+            :emit-value="true"
+            option-value="value"
+            filled
+            label="Chọn mức độ"
+          />
+        </div>
       </div>
       <EditorComponent
         v-model:content="questionLocal.question.description"

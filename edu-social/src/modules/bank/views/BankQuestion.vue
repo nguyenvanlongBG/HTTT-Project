@@ -17,6 +17,7 @@
           :isShowResult="true"
           statusEdit="true"
           :mode="2"
+          :subjects="subjects"
         />
       </div>
     </div>

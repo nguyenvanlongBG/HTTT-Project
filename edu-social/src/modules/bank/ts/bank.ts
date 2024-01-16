@@ -4,6 +4,8 @@ import PopupCreateQuestion from '../components/PopupCreateQuestion.vue';
 import { QuestionWithAnswer } from 'src/modules/core/models';
 import { getQuestionsBySubject } from '../services/bankService';
 import { useQuasar } from 'quasar';
+import { Subject } from 'src/modules/subjects/models';
+import { getAllSubject } from 'src/modules/subjects/services/subjectService';
 export default defineComponent({
   components: {
     QuestionComponent,
@@ -21,8 +23,10 @@ export default defineComponent({
     if (response) {
       this.questions = response;
     }
+    this.subjects = await getAllSubject();
   },
   setup() {
+    const subjects = ref([] as Subject[]);
     const questions = ref([] as QuestionWithAnswer[]);
     const exam = ref({});
     const $q = useQuasar();
@@ -36,6 +40,7 @@ export default defineComponent({
     }
     return {
       exam,
+      subjects,
       questions,
       createQuestion,
     };

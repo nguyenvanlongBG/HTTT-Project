@@ -3,7 +3,7 @@ import request from '../../core/utils/request';
 
 export async function getQuestionsBySubject(subjectID: string) {
   const response = await request({
-    url: `question/subject/${subjectID}`,
+    url: 'question/all',
     method: 'get',
   });
   if (response) {

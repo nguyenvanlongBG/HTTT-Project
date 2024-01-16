@@ -4,6 +4,7 @@ import { Answer, Question, QuestionWithAnswer } from '../../models';
 import { ModeExam, ModeQuestion } from '../../enums/Menu';
 import { updateQuestion, createQuestion } from '../../services';
 import commonFunction from '../../commonFunction';
+import { Subject } from 'src/modules/subjects/models';
 export default defineComponent({
   name: 'QuestionComponent',
   components: {
@@ -33,6 +34,11 @@ export default defineComponent({
       type: String,
       required: false,
       default: '6590176ba57e454f49e4ea25',
+    },
+    subjects: {
+      type: Array,
+      required: false,
+      default: [] as Subject[],
     },
   },
   emits: ['update:question', 'update:answer'],
@@ -139,7 +145,7 @@ export default defineComponent({
         ctx.emit('update:question', response);
       } else {
         delete data.questionData._id;
-        data.questionData.subject_id = props.subjectID;
+        // data.questionData.subject_id = props.subjectID;
         const response = await createQuestion(data);
         ctx.emit('update:question', response);
       }
