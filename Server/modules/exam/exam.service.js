@@ -6,7 +6,7 @@ const Answer = require('../../models/answer/answer.model');
 // Hàm tạo đề thi cho mỗi học sinh dựa trên exam_format
 const generateStudentExam = (questions, exam_format) => {
   const selectedQuestions = [];
-  let remainingQuestions = [...questions];
+  let remainingQuestions = [...questions]; // Tạo bản sao của danh sách câu hỏi
 
   // Lấy số lượng câu hỏi từng loại và mức độ tương ứng
   const { level1, level2, level3, level4 } = exam_format;
@@ -16,37 +16,39 @@ const generateStudentExam = (questions, exam_format) => {
     if (questionList.length === 0) {
       return null; // Không còn câu hỏi
     }
-    const randomIndex = Math.floor(Math.random() * questionList.length);
-    const selectedQuestion = questionList.splice(randomIndex, 1)[0];
+    const questionCopy = [...questionList]; // Tạo bản sao của danh sách câu hỏi
+    const randomIndex = Math.floor(Math.random() * questionCopy.length);
+    const selectedQuestion = questionCopy.splice(randomIndex, 1)[0];
     return selectedQuestion;
   };
 
   // Lấy câu hỏi cho mức độ 1
   for (let i = 0; i < level1; i++) {
-    const question = getRandomQuestion(remainingQuestions.filter((q) => q.level === 1));
+    const question = getRandomQuestion(remainingQuestions.filter((q) => q.level === 1 && !selectedQuestions.includes(q._id)));
     if (question) selectedQuestions.push(question._id);
   }
 
   // Lấy câu hỏi cho mức độ 2
   for (let i = 0; i < level2; i++) {
-    const question = getRandomQuestion(remainingQuestions.filter((q) => q.level === 2));
+    const question = getRandomQuestion(remainingQuestions.filter((q) => q.level === 2 && !selectedQuestions.includes(q._id)));
     if (question) selectedQuestions.push(question._id);
   }
 
   // Lấy câu hỏi cho mức độ 3
   for (let i = 0; i < level3; i++) {
-    const question = getRandomQuestion(remainingQuestions.filter((q) => q.level === 3));
+    const question = getRandomQuestion(remainingQuestions.filter((q) => q.level === 3 && !selectedQuestions.includes(q._id)));
     if (question) selectedQuestions.push(question._id);
   }
 
   // Lấy câu hỏi cho mức độ 4
   for (let i = 0; i < level4; i++) {
-    const question = getRandomQuestion(remainingQuestions.filter((q) => q.level === 4));
+    const question = getRandomQuestion(remainingQuestions.filter((q) => q.level === 4 && !selectedQuestions.includes(q._id)));
     if (question) selectedQuestions.push(question._id);
   }
 
   return selectedQuestions;
 };
+
 
 exports.createExamsForExamPeriod = async (examPeriodId) => {
   try {
