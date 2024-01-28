@@ -26,6 +26,7 @@ export async function createSubmission(data: any) {
     method: 'post',
     data: data,
   });
+  return response;
 }
 export async function createPeriod(data: any) {
   const response = await request({

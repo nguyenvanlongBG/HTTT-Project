@@ -11,7 +11,7 @@ export async function login(email: string, password: string) {
     const token = response.content.token as string;
     setAccessToken(token);
   }
-  if (response.content.user._id) {
+  if (response.content && response.content.user && response.content.user._id) {
     const userID = response.content.user._id as string;
     setCoookieValue('userID', userID);
     setCoookieValue('user', response.content.user);

@@ -46,6 +46,7 @@ export default defineComponent({
   setup() {
     const questions = ref([] as QuestionWithAnswer[]);
     const exam = ref({});
+    const isAfterExam = ref(false);
     const examStore = useExamStore();
     const { getQuestions } = storeToRefs(examStore);
     const hasRoleEdit = ref(true);
@@ -77,7 +78,10 @@ export default defineComponent({
           });
         }
       }
-      await createSubmission(data);
+      const response = await createSubmission(data);
+      if (response && response._id) {
+        isAfterExam.value = true;
+      }
     }
     function createQuestion() {
       const newQuestion = CommonFunction.createQuestion();
@@ -91,6 +95,7 @@ export default defineComponent({
       hasRoleEdit,
       answersUser,
       submit,
+      isAfterExam,
       changeResult,
       createQuestion,
     };

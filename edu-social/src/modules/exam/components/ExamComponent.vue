@@ -1,6 +1,6 @@
 <template>
   <div class="container-exam">
-    <div class="body">
+    <div v-if="!isAfterExam" class="body">
       <div class="toolbar-exam" v-if="editMode == 2">
         <q-btn
           color="primary"
@@ -48,6 +48,12 @@
           @click="submit"
         />
       </div>
+    </div>
+    <div
+      class="body text-h3 flex-center text-primary"
+      v-if="isAfterExam && editMode == 1"
+    >
+      Bạn đã nộp bài thành công
     </div>
     <div class="navbar-questions">
       <div class="numeric-question-board">
