@@ -33,6 +33,9 @@ export default defineComponent({
     function createQuestion() {
       $q.dialog({
         component: PopupCreateQuestion,
+        componentProps: {
+          subjects: subjects.value,
+        },
       }).onOk((data: QuestionWithAnswer) => {
         console.log('Thêm thành công', data);
         questions.value.push(data);

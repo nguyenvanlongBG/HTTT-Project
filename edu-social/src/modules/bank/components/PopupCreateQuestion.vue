@@ -6,7 +6,6 @@
           <div class="header">Tạo câu hỏi</div>
           <div class="body-content">
             <QuestionComponent
-              :key="question._id"
               v-model:question="question"
               :statusEdit="true"
               :isShowAnswer="true"
@@ -14,6 +13,7 @@
               :subjectID="subjectID"
               @update:question="updatedQuestion"
               :mode="2"
+              :subjects="subjects"
             />
           </div>
         </div>
@@ -30,6 +30,7 @@ import { useDialogPluginComponent, useQuasar } from 'quasar';
 import QuestionComponent from '../../core/components/question/QuestionComponent.vue';
 import CommonFunction from '../../core/commonFunction';
 import EButton from 'src/modules/core/components/button/EButton.vue';
+import { Subject } from 'src/modules/subjects/models';
 export default defineComponent({
   name: 'PopupCreatePeriod',
   props: {
@@ -38,8 +39,16 @@ export default defineComponent({
       required: false,
       default: '6590176ba57e454f49e4ea25',
     },
+    subjects: {
+      type: Array,
+      required: false,
+      default: [] as Subject[],
+    },
   },
   emits: [...useDialogPluginComponent.emits],
+  created() {
+    console.log(this.subjects);
+  },
   setup() {
     const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } =
       useDialogPluginComponent();
